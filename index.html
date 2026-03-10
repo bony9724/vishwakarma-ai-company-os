@@ -1189,6 +1189,39 @@ async function executeAllAgents() {
 
   if (completedCount >= 6) {
     showNotification('✓ ALL AGENTS EXECUTED SUCCESSFULLY');
+    // Send all outputs to Make.com for real execution
+    await sendToMake(command, company);
+  }
+}
+
+async function sendToMake(command, company) {
+  const MAKE_WEBHOOK = 'https://hook.us2.make.com/osp4dl3tjjjmh75saawjlylw3w6efreg';
+
+  const outputs = {};
+  AGENTS.forEach(agent => {
+    outputs[agent.role] = document.getElementById(`output-${agent.role}`).textContent;
+  });
+
+  try {
+    await fetch(MAKE_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        command,
+        company,
+        timestamp: new Date().toISOString(),
+        CEO_strategy: outputs['CEO'],
+        CMO_linkedin_post: outputs['CMO'],
+        CFO_financial_report: outputs['CFO'],
+        COO_operations_plan: outputs['COO'],
+        CTO_tech_plan: outputs['CTO'],
+        VP_sales_email: outputs['VP'],
+        HR_job_post: outputs['HR']
+      })
+    });
+    showNotification('⚡ ALL OUTPUTS SENT TO EXECUTION ENGINE');
+  } catch (err) {
+    console.log('Webhook error:', err);
   }
 }
 
