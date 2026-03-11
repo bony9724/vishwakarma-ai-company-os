@@ -821,7 +821,7 @@
     </div>
     <div class="header-stats">
       <div class="stat-chip"><span class="stat-dot"></span> SYSTEM ONLINE</div>
-      <div class="stat-chip">⚡ 7 AGENTS READY</div>
+      <div class="stat-chip">⚡ 8 AGENTS READY</div>
       <div class="stat-chip">🇮🇳 BUILT IN INDIA</div>
     </div>
   </header>
@@ -829,7 +829,7 @@
   <!-- HERO -->
   <div class="hero">
     <div class="hero-badge">⚡ WORLD'S FIRST AI COMPANY OS — AGENTIC EXECUTION</div>
-    <h1 class="hero-title">7 AI Executives.<br><span>Real Tasks. Real Execution.</span></h1>
+    <h1 class="hero-title">8 AI Executives.<br><span>Real Tasks. Real Execution.</span></h1>
     <p class="hero-sub">// GIVE A COMMAND — YOUR COMPANY RUNS AUTOMATICALLY //</p>
 
     <div class="company-selector">
@@ -998,11 +998,29 @@
         <div class="exec-status status-standby" id="status-VP">STANDBY</div>
       </div>
       <div class="task-label">// ASSIGNED TASK</div>
-      <div class="task-display" id="task-VP">Sales Outreach Email + Lead Generation Strategy</div>
+      <div class="task-display" id="task-VP">Sales Outreach Email — Ready To Send</div>
       <div class="output-label">// EXECUTION OUTPUT</div>
       <div class="output-area" id="output-VP">Awaiting command...</div>
       <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-VP"></div></div>
       <button class="copy-btn" id="copy-VP" onclick="copyOutput('VP')">⎘ COPY OUTPUT</button>
+    </div>
+
+    <!-- SALES STRATEGY -->
+    <div class="exec-card" id="card-SALES_STRATEGY">
+      <div class="card-header">
+        <div class="exec-icon">📈</div>
+        <div class="exec-info">
+          <div class="exec-role">SALES STRATEGY</div>
+          <div class="exec-title">Lead Generation — 7 Day Plan</div>
+        </div>
+        <div class="exec-status status-standby" id="status-SALES_STRATEGY">STANDBY</div>
+      </div>
+      <div class="task-label">// ASSIGNED TASK</div>
+      <div class="task-display" id="task-SALES_STRATEGY">Lead Generation Strategy — 7 Day Plan</div>
+      <div class="output-label">// EXECUTION OUTPUT</div>
+      <div class="output-area" id="output-SALES_STRATEGY">Awaiting command...</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-SALES_STRATEGY"></div></div>
+      <button class="copy-btn" id="copy-SALES_STRATEGY" onclick="copyOutput('SALES_STRATEGY')">⎘ COPY OUTPUT</button>
     </div>
 
     <!-- HR -->
@@ -1138,8 +1156,38 @@ const AGENTS = [
   },
   {
     role: 'VP',
-    task: 'Sales Outreach Email + Lead Generation Strategy',
-    systemPrompt: (company, command, details) => `You are the VP of Sales of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a REAL ready-to-send sales outreach email FROM ${details.companyName} TO ${details.targetCustomer}. Use real company name. No placeholders like [First Name] or [Company Name]. Write the actual email with real subject line and real body. Then write lead generation strategy. 300 words max.`
+    task: 'Sales Outreach Email — Ready To Send',
+    systemPrompt: (company, command, details) => `You are the VP of Sales of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". 
+
+Write ONLY a clean professional sales outreach email. Nothing else. No strategy. No headers. Just the email.
+
+Use EXACTLY this format:
+
+Subject: [write a compelling subject line]
+
+Hi [use a real first name common in ${details.targetCustomer}],
+
+[2-3 sentence opening that shows you understand their pain]
+
+[1-2 sentences about ${details.companyName} and what it does]
+
+[3 bullet points of key benefits — short and specific]
+
+[Clear call to action — one sentence]
+
+Best regards,
+[Sales person name]
+VP Sales, ${details.companyName}
+${details.targetCustomer.includes('India') ? '+91-98XXX-XXXXX' : ''}
+
+P.S. [One powerful closing line with social proof]
+
+Keep it under 150 words. Professional business email tone only.`
+  },
+  {
+    role: 'SALES_STRATEGY',
+    task: 'Lead Generation Strategy — 7 Day Plan',
+    systemPrompt: (company, command, details) => `You are the VP of Sales of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a detailed 7-day lead generation strategy to get 10 paying customers. Include specific channels, daily actions, and conversion targets. 300 words max.`
   },
   {
     role: 'HR',
@@ -1264,7 +1312,7 @@ async function executeAllAgents() {
   }
 }
 
-async function sendToMake(command, company) {
+async function sendToMake(command, company, details) {
   const MAKE_WEBHOOK = 'https://hook.us2.make.com/osp4dl3tjjjmh75saawjlylw3w6efreg';
 
   const outputs = {};
@@ -1286,6 +1334,7 @@ async function sendToMake(command, company) {
         COO_operations_plan: outputs['COO'],
         CTO_tech_plan: outputs['CTO'],
         VP_sales_email: outputs['VP'],
+        VP_sales_strategy: outputs['SALES_STRATEGY'],
         HR_job_post: outputs['HR']
       })
     });
