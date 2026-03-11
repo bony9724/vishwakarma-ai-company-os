@@ -879,7 +879,7 @@
       <span class="char-count" id="charCount">0/500</span>
     </div>
     <button class="execute-btn" id="executeBtn" onclick="executeAllAgents()">
-      ⚡ DEPLOY ALL 7 AGENTS — EXECUTE NOW
+      ⚡ DEPLOY ALL 8 AGENTS — EXECUTE NOW
     </button>
   </div>
 
@@ -1303,7 +1303,7 @@ async function executeAllAgents() {
   await Promise.all(AGENTS.map(agent => callAgent(agent, company, command, details)));
 
   btn.disabled = false;
-  btn.textContent = '⚡ DEPLOY ALL 7 AGENTS — EXECUTE NOW';
+  btn.textContent = '⚡ DEPLOY ALL 8 AGENTS — EXECUTE NOW';
   isRunning = false;
 
   if (completedCount >= 6) {
