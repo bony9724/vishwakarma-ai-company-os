@@ -581,6 +581,50 @@
     50% { transform: translateY(-4px); opacity: 1; }
   }
 
+  /* DETAILS GRID */
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .detail-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .detail-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--cyan);
+    letter-spacing: 2px;
+  }
+
+  .detail-input {
+    background: rgba(0,245,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .detail-input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan-glow);
+  }
+
+  .detail-input::placeholder { color: var(--text-dim); }
+
+  @media (max-width: 600px) {
+    .details-grid { grid-template-columns: 1fr; }
+  }
+
   /* GLOBAL PROGRESS */
   .global-progress {
     background: var(--panel);
@@ -802,9 +846,29 @@
     </div>
   </div>
 
-  <!-- COMMAND INPUT -->
+  <!-- COMPANY DETAILS -->
   <div class="command-section">
-    <div class="command-label">ENTER COMMAND FOR YOUR COMPANY OS</div>
+    <div class="command-label">// ENTER YOUR COMPANY DETAILS FOR PERSONALIZED EXECUTION</div>
+    <div class="details-grid">
+      <div class="detail-field">
+        <label class="detail-label">COMPANY NAME</label>
+        <input type="text" class="detail-input" id="companyName" placeholder="e.g. Growzle, Vishwakarma AI"/>
+      </div>
+      <div class="detail-field">
+        <label class="detail-label">INDUSTRY</label>
+        <input type="text" class="detail-input" id="companyIndustry" placeholder="e.g. HR Tech, SaaS, E-commerce"/>
+      </div>
+      <div class="detail-field">
+        <label class="detail-label">TARGET CUSTOMER</label>
+        <input type="text" class="detail-input" id="targetCustomer" placeholder="e.g. Startup founders, SME owners"/>
+      </div>
+      <div class="detail-field">
+        <label class="detail-label">BIGGEST PROBLEM RIGHT NOW</label>
+        <input type="text" class="detail-input" id="biggestProblem" placeholder="e.g. No leads, Low revenue, No team"/>
+      </div>
+    </div>
+
+    <div class="command-label" style="margin-top:20px">ENTER COMMAND FOR YOUR COMPANY OS</div>
     <div class="command-box">
       <textarea
         class="command-input"
@@ -1050,37 +1114,37 @@ const AGENTS = [
   {
     role: 'CEO',
     task: 'Strategic Business Plan & Daily Execution Roadmap',
-    systemPrompt: (company, command) => `You are the CEO of a ${company}. The founder has issued this command: "${command}". Execute your role. Create a strategic business plan and daily execution roadmap. Be specific, actionable, and direct. Format with clear sections. 250 words max.`
+    systemPrompt: (company, command, details) => `You are the CEO of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a SPECIFIC strategic business plan and daily execution roadmap for ${details.companyName}. Use the company name, industry and specific details throughout. No placeholders. Real actionable steps. 300 words max.`
   },
   {
     role: 'CMO',
     task: 'LinkedIn Post + Marketing Campaign Strategy',
-    systemPrompt: (company, command) => `You are the CMO of a ${company}. The founder has issued this command: "${command}". Execute your role. Write a compelling LinkedIn post AND a 30-day marketing campaign strategy. Be specific and actionable. 250 words max.`
+    systemPrompt: (company, command, details) => `You are the CMO of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a REAL ready-to-publish LinkedIn post specifically for ${details.companyName} and a 30-day marketing campaign. Use real company details. No placeholders like [Company Name]. Write the actual post as if you are the founder of ${details.companyName}. 300 words max.`
   },
   {
     role: 'CFO',
     task: 'Financial Analysis + Revenue Strategy Report',
-    systemPrompt: (company, command) => `You are the CFO of a ${company}. The founder has issued this command: "${command}". Execute your role. Provide financial analysis, budget allocation recommendations, and revenue strategy. Be specific with numbers. 250 words max.`
+    systemPrompt: (company, command, details) => `You are the CFO of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a SPECIFIC financial analysis and revenue strategy for ${details.companyName}. Include real numbers, pricing recommendations, and revenue projections specific to the ${details.industry} industry. No placeholders. 300 words max.`
   },
   {
     role: 'COO',
     task: 'Operations Workflow + Daily Task Execution Plan',
-    systemPrompt: (company, command) => `You are the COO of a ${company}. The founder has issued this command: "${command}". Execute your role. Create a detailed operations workflow and daily task execution plan. List specific tasks with timelines. 250 words max.`
+    systemPrompt: (company, command, details) => `You are the COO of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a SPECIFIC operations workflow and daily task execution plan for ${details.companyName}. Make it specific to the ${details.industry} industry. No placeholders. Real tasks with real timelines. 300 words max.`
   },
   {
     role: 'CTO',
     task: 'Technical Architecture + Product Development Plan',
-    systemPrompt: (company, command) => `You are the CTO of a ${company}. The founder has issued this command: "${command}". Execute your role. Provide technical architecture recommendations and product development plan. Be specific about tech stack and implementation. 250 words max.`
+    systemPrompt: (company, command, details) => `You are the CTO of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a SPECIFIC technical architecture and product development plan for ${details.companyName}. Recommend specific tech stack suitable for ${details.industry}. No placeholders. Real technical recommendations. 300 words max.`
   },
   {
     role: 'VP',
     task: 'Sales Outreach Email + Lead Generation Strategy',
-    systemPrompt: (company, command) => `You are the VP of Sales of a ${company}. The founder has issued this command: "${command}". Execute your role. Write a ready-to-send sales outreach email AND a lead generation strategy with specific targets. 250 words max.`
+    systemPrompt: (company, command, details) => `You are the VP of Sales of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a REAL ready-to-send sales outreach email FROM ${details.companyName} TO ${details.targetCustomer}. Use real company name. No placeholders like [First Name] or [Company Name]. Write the actual email with real subject line and real body. Then write lead generation strategy. 300 words max.`
   },
   {
     role: 'HR',
     task: 'Team Building + HR Strategy + Job Description',
-    systemPrompt: (company, command) => `You are the CHRO of a ${company}. The founder has issued this command: "${command}". Execute your role. Create an HR strategy, team building plan, and write a job description for the most critical hire. 250 words max.`
+    systemPrompt: (company, command, details) => `You are the CHRO of ${details.companyName}, a ${company} in the ${details.industry} industry. Target customer: ${details.targetCustomer}. Biggest problem: ${details.biggestProblem}. The founder command: "${command}". Write a SPECIFIC HR strategy and job description for the most critical hire at ${details.companyName}. Make it specific to ${details.industry}. No placeholders. Real salary ranges, real responsibilities. 300 words max.`
   }
 ];
 
@@ -1127,7 +1191,7 @@ function setCardError(role, error) {
   document.getElementById('gpBar').style.width = `${(completedCount / 7) * 100}%`;
 }
 
-async function callAgent(agent, company, command) {
+async function callAgent(agent, company, command, details) {
   setCardExecuting(agent.role);
   try {
     const response = await fetch('/api/agents', {
@@ -1135,7 +1199,7 @@ async function callAgent(agent, company, command) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         role: agent.role,
-        systemPrompt: agent.systemPrompt(company, command),
+        systemPrompt: agent.systemPrompt(company, command, details),
         command
       })
     });
@@ -1149,6 +1213,13 @@ async function callAgent(agent, company, command) {
 
 async function executeAllAgents() {
   const command = document.getElementById('commandInput').value.trim();
+  const companyName = document.getElementById('companyName').value.trim() || 'Your Company';
+  const industry = document.getElementById('companyIndustry').value.trim() || 'Technology';
+  const targetCustomer = document.getElementById('targetCustomer').value.trim() || 'Business owners';
+  const biggestProblem = document.getElementById('biggestProblem').value.trim() || 'Growing the business';
+
+  const details = { companyName, industry, targetCustomer, biggestProblem };
+
   if (!command) {
     document.getElementById('commandInput').focus();
     document.getElementById('commandInput').style.borderColor = '#ff4444';
@@ -1181,7 +1252,7 @@ async function executeAllAgents() {
   document.getElementById('gpCount').textContent = '0 / 7 COMPLETE';
 
   // Execute all 7 simultaneously
-  await Promise.all(AGENTS.map(agent => callAgent(agent, company, command)));
+  await Promise.all(AGENTS.map(agent => callAgent(agent, company, command, details)));
 
   btn.disabled = false;
   btn.textContent = '⚡ DEPLOY ALL 7 AGENTS — EXECUTE NOW';
@@ -1189,8 +1260,7 @@ async function executeAllAgents() {
 
   if (completedCount >= 6) {
     showNotification('✓ ALL AGENTS EXECUTED SUCCESSFULLY');
-    // Send all outputs to Make.com for real execution
-    await sendToMake(command, company);
+    await sendToMake(command, company, details);
   }
 }
 
